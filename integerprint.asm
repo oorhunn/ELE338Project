@@ -77,5 +77,5 @@ dollars_loop:
 loop dollars_loop
 
 ret
-endp  
+endp dollars                   
 

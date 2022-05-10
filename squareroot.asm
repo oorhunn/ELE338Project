@@ -4,25 +4,36 @@ org 100h
 .data    
 .code 
 main proc
-    mov si,8
-    call factorial  
+    mov si,144
+    call squareroot
     
              
     hlt         
 endp main
 
-factorial proc
-    mov bx,si   ; Getting input into SI
-    mov ax,1
-    factloop:
-        mul bx
-        dec bx
-        cmp bx,1
-        je endfact    
+squareroot proc
+    mov bx,si
+    mov bp,1    ; init bp to 1
+    sqrloop:
+        mov ax,bp
+        mul ax
+        cmp ax,bx
+        je sqrtrue
         
+        cmp ax,bx
+        ja lowersqr
         
+        inc bp    
+    jmp sqrloop
+    sqrtrue:
+        ; value in bp
+        ret
+    
+    lowersqr:
+        dec bp
+        ; lower val in bp          
+              
+    
         
-    jmp factloop
-    endfact:    
     ret
-endp factorial    
+endp squareroot    
