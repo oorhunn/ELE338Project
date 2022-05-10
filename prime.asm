@@ -12,7 +12,7 @@ main proc
     mov ax,dx
     mov di,ax
         
-    mov si,10
+    mov si,11
     call prime 
 
 
@@ -42,50 +42,52 @@ prime proc
         mov dx,offset msg
         mov ah,09h
         int 21h
+        mov num,bx
+        call writeint
         ret    
     notprime:  
-        push bx
-        push bx ; saving first input into stack
-        call lowerprime
-        ret 
+        dec bx
+        mov bp,2    ; init BP 
+        mov ax,bx
+        
+        cmp bx,1
+        jz onecond
+        
+        cmp bx,2
+        jz twocond       
+        innerloop:
+            mov dx,0
+            mov ax,bx
+            div bp
+            cmp dx,0
+            jz notprime
+            inc bp
+            
+            cmp bx,bp
+            jz lowerprimefound
+                       
+            
+            
+        jmp innerloop
+        onecond:
+        mov num,1
+        call writeint
+        ret
+        
+        twocond:
+        mov num,2
+        call writeint
+        ret
+        
+        lowerprimefound:
+        mov num,bx
+        call writeint
+        ret         
+
+         
         
 prime endp        
-
-lowerprime proc
-    pop bx
-    dec bx
-    mov bp,2    ; init BP 
-    mov ax,bx
-    
-    cmp bx,1
-    jz onecond
-    
-    cmp bx,2
-    jz twocond       
-    innerloop:
-        mov ax,bx
-        cmp ax,bp
-        jz lowerprimefound           
-        dec bx
-        
-    jmp innerloop
-    onecond:
-    mov num,1
-    call writeint
-    ret
-    
-    twocond:
-    mov num,2
-    call writeint
-    ret
-    
-    lowerprimefound:
-    mov num,bx
-    call writeint
-    ret                       
-               
-lowerprime endp    
-
+   
 
 linebreak proc
     mov dx,offset nextline
