@@ -15,6 +15,29 @@ org 100h
     item4 db    "<  4-Prime      >","$"
     item5 db    "<  5-ABOUT      >","$"
     item6 db    "<  6-EXIT       >","$"
+    
+    aboutmsg1 db  "<<<<<<<<<<<<<AUTHOR>>>>>>>>>>>>",10,13,10,13,"$"
+    aboutmsg2 db  "Full Name: Anil Orhun Demiroglu",10,13,10,13,"$"
+    aboutmsg3 db  "Studen Number: 21728184",10,13,10,13,"$"
+    aboutmsg4 db  "Nickname: Vuzuu",10,13,10,13,"$"
+    aboutmsg5 db  "About Project: This project is written for ELE338 lecture.",10,13,10,13,"$"
+    aboutmsg6 db  "<<<<<<<<<<ABOUT PROJECT>>>>>>>>",10,13,10,13,"$"    
+    aboutmsg7 db  "Code has 4 utilities.",10,13,10,13,"$"  
+    aboutmsg8 db  "1-) It can find if input is a Fibonacci Number or not.",10,13,10,13,"$"
+    aboutmsg9 db  "If it is not a Fibonacci Number it will print nearst Fibonacci Number",10,13,10,13,"$"
+    aboutmsg10 db  "2-) It can find factorial of an input.",10,13,10,13,"$"
+    aboutmsg11 db "But be careful 16-bbit register can calculate if your input if lower than 9.",10,13,10,13,"$"
+    aboutmsg12 db "3-) It can find Square Root of an input. ",10,13,10,13,"$"
+    aboutmsg13 db "If it is not square number it will print nearst one.",10,13,10,13,"$"
+    aboutmsg14 db "4-) It can find if a number is prime or not. ",10,13,10,13,"$"
+    aboutmsg15 db "If input is not a prime number it will print closest prime to input",10,13,10,13,"$"
+    aboutmsg16 db "Thats all about this code.",10,13,10,13,"$"
+    aboutmsg17 db "Have a nice a day :)",10,13,10,13,"$"
+    
+    
+    
+    
+    
     optionmsg db "Please choose one of the options: ","$"                
     inputnumber db 6, 1 dup(?)    
     ask db 10,13,"Please enter a number: ","$"
@@ -46,7 +69,8 @@ main proc
 ; prime         input -> SI, OUTPUT-> BP printpart done
 ; fibonacci     input -> SI, OUTPUT-> DX needs to lower part
 ; input leaves input in SI
-; TODO add EXIT
+; TODO add EXIT 
+; TODO fix about part it is too long to fit in screen
     
 foreverloop:
     
@@ -61,6 +85,7 @@ endp main
 choice proc
     choicestart:
     call inputpart
+
     cmp si,1
     je tofibon
     
@@ -151,6 +176,59 @@ choice proc
     toabout:          
         mov ax,3
         int 10h
+        
+        mov dx,offset aboutmsg1
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg2
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg3
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg4
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg5
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg6
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg7
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg8
+        mov ah,09h
+        int 21h         
+        mov dx,offset aboutmsg9
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg10
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg11
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg12
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg13
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg14
+        mov ah,09h
+        int 21h        
+        mov dx,offset aboutmsg15
+        mov ah,09h
+        int 21h
+        mov dx,offset aboutmsg16
+        mov ah,09h
+        int 21h          
+        mov dx,offset aboutmsg17
+        mov ah,09h
+        int 21h         
+               
         ret
     toexit:
         mov ax,3
