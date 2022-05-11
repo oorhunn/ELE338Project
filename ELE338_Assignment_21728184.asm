@@ -5,7 +5,7 @@ org 100h
     numstr db "$$$$$$$" ;empty array for 5 digit output       
     num dw ?                                   
     nextline    db 13,10,'$'    ;line break.    
-    menu db     "<<<<<<<<<<MENU>>>>>>>>>","$" 
+    menu db     "<<<<<<<MENU>>>>>>","$" 
     border db   "<<<<<<<<<>>>>>>>>","$" 
     item1 db    "<  1-Fibonacci  >","$"
     item2 db    "<  2-Factorial  >","$"
@@ -585,6 +585,8 @@ endp fibonacci
 factorial proc
     mov bx,si   ; Getting input into SI
     mov ax,1
+    cmp bx,0
+    je zerocond
     cmp bx,8
     ja facterror
     factloop:
@@ -607,6 +609,12 @@ factorial proc
 	    int 21h
 	    call linebreak
     ret
+    zerocond:
+        call linebreak
+        mov num,1
+        call writeINT
+        call linebreak
+        ret
 endp factorial
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 linebreak proc
