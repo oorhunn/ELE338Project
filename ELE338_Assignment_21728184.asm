@@ -1,9 +1,7 @@
 org 100h
 .model small
 .stack 64
-.data
-    mynumber dw 1092 
-    msg db "prime","$"    
+.data   
     numstr db "$$$$$$$" ;empty array for 5 digit output       
     num dw ?                                   
     nextline    db 13,10,'$'    ;line break.    
@@ -14,8 +12,7 @@ org 100h
     item3 db    "<  3-Square     >","$"
     item4 db    "<  4-Prime      >","$"
     item5 db    "<  5-ABOUT      >","$"
-    item6 db    "<  6-EXIT       >","$"
-    
+    item6 db    "<  6-EXIT       >","$"    
     aboutmsg1 db  "<<<<<<<<<<<<<AUTHOR>>>>>>>>>>>>",10,13,10,13,"$"
     aboutmsg2 db  "Full Name: Anil Orhun Demiroglu",10,13,10,13,"$"
     aboutmsg3 db  "Studen Number: 21728184",10,13,10,13,"$"
@@ -33,32 +30,25 @@ org 100h
     aboutmsg15 db "If input is not a prime number it will print closest prime to input",10,13,10,13,"$"
     aboutmsg16 db "Thats all about this code.",10,13,10,13,"$"
     aboutmsg17 db "Have a nice a day :)",10,13,10,13,"$"
-    
-    
-    
-    
-    
-    optionmsg db "Please choose one of the options: ","$"                
+    optionmsg db "Please choose one of the options: ","$"
+    pagemsg db "press Y/y for read more...","$"
+    pagereturnmsg db "Press Y/y for return to main menu","$"
+    pagepart1 db "page(1/3)","$"
+    pagepart2 db "page(2/3)","$"   
+    pagepart3 db "page(3/3)","$"                           
     inputnumber db 6, 1 dup(?)    
     ask db 10,13,"Please enter a number: ","$"
     integer db 2,1,1 dup(" ")
-
     inputmsg db "Please enter your input: ","$" 
-    
     errormsg db "Invalid input please enter valid input","$" 
-    
     squarerootmsg db "You have selected Square Root","$"
     positvsqrmsg db "Your number is square number and square root is:  ","$"      
     negativesqrmsg db "Your number is not square number closest square root is: ","$"
-    
     primemsg db "You have selected prime number","$"
     positvprimemsg db "Your input is a prime number: ","$"
-    negativevprimemsg db "Your input is not a prime number closest prime number is: ","$"
-    
+    negativevprimemsg db "Your input is not a prime number closest prime number is: ","$"    
     factorialinitmsg db "You have selected Factorial","$"
-    facterrormsg db "Your inputs result wont fit in 16-bit register please enter a number that smaller than 9","$"
-    
-    
+    facterrormsg db "Your inputs result wont fit in 16-bit register please enter a number that smaller than 9","$"    
     fiboninitmsg db "You have selected Fibonacci Number","$"    
     fibonlowermsg db "Your input is not a Fibonacci Number closest Fibonacci Number is: ","$"    
     fibonmsg db "Your input is Fibonacci Number","$"
@@ -69,23 +59,29 @@ main proc
 ; prime         input -> SI, OUTPUT-> BP printpart done
 ; fibonacci     input -> SI, OUTPUT-> DX needs to lower part
 ; input leaves input in SI
-; TODO add EXIT 
-; TODO fix about part it is too long to fit in screen
-    
+; TODO add EXIT
+    mov ax,3    ; First resetting CMD screen
+    int 10h    
 foreverloop:
-    
+
     call mainmenu
-    call choice 
+    call choice
+    mov ah,01h ; exit condition
+    int 16h
+    cmp al,01Bh
+    je toexit
+     
 jmp foreverloop    
         
              
     hlt         
 endp main  
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 choice proc
     choicestart:
     call inputpart
-
+    cmp si,1Bh
+    je toexit
     cmp si,1
     je tofibon
     
@@ -175,8 +171,7 @@ choice proc
         ret
     toabout:          
         mov ax,3
-        int 10h
-        
+        int 10h        
         mov dx,offset aboutmsg1
         mov ah,09h
         int 21h
@@ -190,46 +185,106 @@ choice proc
         mov ah,09h
         int 21h        
         mov dx,offset aboutmsg5
-        mov ah,09h
-        int 21h
-        mov dx,offset aboutmsg6
-        mov ah,09h
+        mov ah,09h  
         int 21h        
-        mov dx,offset aboutmsg7
+        mov dx,offset pagemsg
         mov ah,09h
         int 21h
-        mov dx,offset aboutmsg8
-        mov ah,09h
-        int 21h         
-        mov dx,offset aboutmsg9
+        call linebreak
+        mov dx,offset pagepart1
         mov ah,09h
         int 21h
-        mov dx,offset aboutmsg10
-        mov ah,09h
-        int 21h        
-        mov dx,offset aboutmsg11
-        mov ah,09h
+        call linebreak        
+        mov ah,01h ; exit condition
         int 21h
-        mov dx,offset aboutmsg12
-        mov ah,09h
-        int 21h        
-        mov dx,offset aboutmsg13
-        mov ah,09h
-        int 21h
-        mov dx,offset aboutmsg14
-        mov ah,09h
-        int 21h        
-        mov dx,offset aboutmsg15
-        mov ah,09h
-        int 21h
-        mov dx,offset aboutmsg16
-        mov ah,09h
-        int 21h          
-        mov dx,offset aboutmsg17
-        mov ah,09h
-        int 21h         
-               
-        ret
+        cmp al,"y"
+        je aboutcnt
+        cmp al,"Y"
+        je aboutcnt
+        cmp al,01Bh ; ESC exit condition
+        je toexit        
+        ret ;exit for page 1 
+            aboutcnt:
+            mov ax,3
+            int 10h            
+            mov dx,offset aboutmsg6
+            mov ah,09h
+            int 21h        
+            mov dx,offset aboutmsg7
+            mov ah,09h
+            int 21h
+            mov dx,offset aboutmsg8
+            mov ah,09h
+            int 21h         
+            mov dx,offset aboutmsg9
+            mov ah,09h
+            int 21h
+            mov dx,offset aboutmsg10
+            mov ah,09h
+            int 21h        
+            mov dx,offset aboutmsg11
+            mov ah,09h
+            int 21h
+            mov dx,offset aboutmsg12
+            mov ah,09h
+            int 21h
+            mov dx,offset pagemsg
+            mov ah,09h
+            int 21h
+            call linebreak
+            mov dx,offset pagepart2
+            mov ah,09h
+            int 21h
+            call linebreak
+            mov ah,01h ; exit condition
+            int 21h
+            cmp al,"y"
+            je aboutcntt
+            cmp al,"Y"        
+            je aboutcntt
+            cmp al,01Bh ; ESC exit condition
+            je toexit
+            ret ; exit for page 2
+            aboutcntt:            
+                mov ax,3
+                int 10h 
+                mov dx,offset aboutmsg13
+                mov ah,09h
+                int 21h
+                mov dx,offset aboutmsg14
+                mov ah,09h
+                int 21h 
+                mov dx,offset aboutmsg15
+                mov ah,09h
+                int 21h
+                mov dx,offset aboutmsg16
+                mov ah,09h
+                int 21h          
+                mov dx,offset aboutmsg17
+                mov ah,09h
+                int 21h
+                mov dx,offset pagereturnmsg
+                mov ah,09h
+                int 21h
+                
+                call linebreak
+                mov dx,offset pagepart3
+                mov ah,09h
+                int 21h
+                call linebreak
+                mov ah,01h ; exit condition
+                int 21h
+                cmp al,"y"
+                je aboutcnttt
+                cmp al,"Y"        
+                je aboutcnttt
+                cmp al,01Bh ; ESC exit condition
+                je toexit                                    
+            ret
+        aboutcnttt:
+            mov ax,3
+            int 10h 
+            ret
     toexit:
         mov ax,3
         int 10h               
@@ -428,7 +483,6 @@ endp number2string
 ;used before convert numbers to string, because
 ;the string will be displayed.
 ;parameter : si = pointing to string to fill.
-
 proc dollars                 
     mov  cx, 5
     mov  di, offset numstr
@@ -444,7 +498,6 @@ inputpart proc
     mov dx,offset inputnumber
     mov ah,0Ah
     int 21h
-    
     lea bp,inputnumber
     add bp,2
     mov ax,0
